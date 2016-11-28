@@ -12,30 +12,13 @@ survivalequip.controller('adminCtrl', function ($firebaseObject, $firebaseArray,
     };
     firebase.initializeApp(config);
 
-    $http({
-        method: "GET",
-        url: 'https://survival-eqip-limited.firebaseio.com/ProductCategories.json',
-    })
-        .then(function (res) {
-         //   console.log(res.data);
-            $rootScope.choices = res.data
-        })
-        .catch(function (err) {
-            console.log(err);
-        })
+var ref = firebase.database().ref('clients');
 
+$rootScope.clients = $firebaseArray(ref);
 
-    $http({
-        method: "GET",
-        url: 'https://survival-eqip-limited.firebaseio.com/clients.json',
-    })
-        .then(function (res) {
-         //   console.log(res.data);
-            $rootScope.clients = res.data
-        })
-        .catch(function (err) {
-            console.log(err);
-        })
+var ref = firebase.database().ref('ProductCategories');
+
+$rootScope.choices = $firebaseArray(ref);
 
 
     $scope.send = function (frm1) {
