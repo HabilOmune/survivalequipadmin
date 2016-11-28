@@ -25,6 +25,19 @@ survivalequip.controller('adminCtrl', function ($firebaseObject, $firebaseArray,
         })
 
 
+    $http({
+        method: "GET",
+        url: 'https://survival-eqip-limited.firebaseio.com/clients.json',
+    })
+        .then(function (res) {
+         //   console.log(res.data);
+            $rootScope.clients = res.data
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
+
+
     $scope.send = function (frm1) {
         Materialize.toast('Uploading...', 2000)
         var myFile = $('#file').prop('files');
@@ -78,5 +91,36 @@ survivalequip.controller('adminCtrl', function ($firebaseObject, $firebaseArray,
     }
 
 
+
+$scope.createClient = function (frm2){
+  Materialize.toast('Uploading...', 2000)
+        var myFile = $('#file2').prop('files');
+        var myFile = myFile[0];
+        var filename = myFile.name;
+        var storageRef = firebase.storage().ref('clients/'+ frm2.name +'/'+ filename);
+
+        var task = storageRef.put(myFile)
+            .then(function (res) {
+                var url = res.downloadURL
+                var productFrm = firebase.database().ref('clients/')
+                productFrm.push({
+                    name: frm2.name,
+                    image: url
+                })
+                    .then(function (res) {
+                        console.log(res)
+                        Materialize.toast('Upload Successfull', 4000)
+                        $rootScope.frm = null;
+                    })
+                    .catch(function (err) {
+                        console.log(err)
+                        Materialize.toast('Upload UnSuccessfull', 4000)
+                    })
+            })
+            .catch(function (err) {
+         console.log(err);
+            }); 
+   
+}
 
 })
